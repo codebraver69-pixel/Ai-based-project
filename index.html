@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3B82C4">
+  <title>KitaBook - Trade Books, Share Stories</title>
+  <meta name="description" content="The community marketplace for affordable books. Buy, sell, and trade books with fellow readers at great prices.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f5f0;
+      --fg: #1a2233;
+      --card: #ffffff;
+      --card-fg: #1a2233;
+      --primary: #3b82c4;
+      --primary-fg: #ffffff;
+      --secondary: #f0e4d4;
+      --secondary-fg: #1a2233;
+      --muted: #f0f0f0;
+      --muted-fg: #6b7280;
+      --accent: #e6d5c3;
+      --border: #e6ddd2;
+      --radius: 0.75rem;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; }
+
+    /* ---- Navbar ---- */
+    .navbar {
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(12px);
+    }
+    .navbar-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; padding: 0 1rem;
+    }
+    .logo { display: flex; align-items: center; gap: 0.5rem; }
+    .logo-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--primary); display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 20px; height: 20px; color: #fff; }
+    .logo-text { font-size: 1.25rem; font-weight: 800; color: var(--fg); }
+    .nav-links { display: flex; align-items: center; gap: 0.25rem; }
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 0.875rem; border-radius: var(--radius);
+      font-size: 0.875rem; font-weight: 500; color: var(--fg);
+      background: transparent; border: none; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nav-link:hover { background: var(--muted); }
+    .nav-link svg { width: 16px; height: 16px; }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--primary); color: var(--primary-fg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;
+    }
+    .mobile-toggle {
+      display: none; background: none; border: none; cursor: pointer;
+      padding: 0.5rem; border-radius: 8px;
+    }
+    .mobile-toggle:hover { background: var(--muted); }
+    .mobile-toggle svg { width: 24px; height: 24px; color: var(--fg); }
+    .mobile-menu {
+      display: none; border-top: 1px solid var(--border);
+      background: var(--card); padding: 1rem;
+    }
+    .mobile-menu.active { display: block; }
+    .mobile-menu .nav-link { width: 100%; justify-content: flex-start; }
+
+    @media (max-width: 768px) {
+      .nav-links, .avatar { display: none; }
+      .mobile-toggle { display: block; }
+    }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.9375rem; font-weight: 600;
+      padding: 0.625rem 1.5rem; border-radius: var(--radius);
+      cursor: pointer; border: none; transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--primary); color: var(--primary-fg); }
+    .btn-primary:hover { background: #2e6ba3; }
+    .btn-outline {
+      background: transparent; color: var(--fg);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { background: var(--muted); }
+    .btn svg { width: 16px; height: 16px; }
+    .btn-lg { padding: 0.75rem 1.75rem; font-size: 1rem; }
+
+    /* ---- Hero ---- */
+    .hero { background: var(--secondary); position: relative; overflow: hidden; }
+    .hero-inner {
+      max-width: 1280px; margin: 0 auto; padding: 5rem 1rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid rgba(59,130,196,0.2); background: rgba(59,130,196,0.05);
+      border-radius: 999px; padding: 0.375rem 1rem; margin-bottom: 1rem;
+      font-size: 0.875rem; font-weight: 500; color: var(--primary);
+    }
+    .hero-badge svg { width: 14px; height: 14px; }
+    .hero h1 {
+      font-size: 3.25rem; font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.02em; color: var(--fg); text-wrap: balance;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero-desc {
+      margin-top: 1rem; font-size: 1.125rem; line-height: 1.6;
+      color: var(--muted-fg); max-width: 28rem; text-wrap: pretty;
+    }
+    .hero-buttons { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .book-stack { display: flex; justify-content: center; position: relative; }
+    .book-stack-item {
+      position: absolute; width: 180px; height: 240px;
+      border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 1rem; text-align: center; color: #fff;
+    }
+    .book-stack-item .author { font-size: 0.75rem; font-weight: 500; opacity: 0.7; margin-bottom: 0.25rem; }
+    .book-stack-item .title { font-size: 0.875rem; font-weight: 700; line-height: 1.3; }
+    .book-stack-spacer { width: 260px; height: 290px; }
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; padding: 3rem 1rem; }
+      .book-stack { display: none; }
+      .hero h1 { font-size: 2.25rem; }
+    }
+
+    /* ---- Stats ---- */
+    .stats { border-bottom: 1px solid var(--border); background: var(--card); }
+    .stats-inner {
+      max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+    }
+    .stat { text-align: center; }
+    .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.875rem; color: var(--muted-fg); margin-top: 0.25rem; }
+    @media (max-width: 640px) { .stats-inner { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ---- Section ---- */
+    .section { padding: 4rem 1rem; }
+    .section-inner { max-width: 1280px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-header h2 { font-size: 1.875rem; font-weight: 700; color: var(--fg); text-wrap: balance; }
+    .section-header p { margin-top: 0.75rem; color: var(--muted-fg); max-width: 32rem; margin-inline: auto; }
+
+    /* ---- How It Works ---- */
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .step-card {
+      position: relative; background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem; text-align: center;
+    }
+    .step-number {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--primary); color: var(--primary-fg);
+      font-size: 0.8125rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-icon {
+      width: 56px; height: 56px; border-radius: 12px;
+      background: var(--secondary); margin: 0 auto 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-icon svg { width: 28px; height: 28px; color: var(--primary); }
+    .step-card h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .step-card p { font-size: 0.875rem; color: var(--muted-fg); line-height: 1.6; }
+    @media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr; } }
+
+    /* ---- Book Cards Grid ---- */
+    .featured-bg { background: rgba(240,228,212,0.4); }
+    .featured-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;
+    }
+    .featured-header h2 { font-size: 1.875rem; font-weight: 700; }
+    .featured-header p { margin-top: 0.25rem; color: var(--muted-fg); }
+    .books-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    @media (max-width: 1024px) { .books-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px) { .books-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .book-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      transition: all 0.2s; cursor: pointer;
+    }
+    .book-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .book-cover {
+      aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem; text-align: center; color: #fff; position: relative;
+    }
+    .book-cover .author { font-size: 0.8125rem; font-weight: 500; opacity: 0.8; margin-bottom: 0.5rem; }
+    .book-cover .title { font-size: 1.0625rem; font-weight: 700; line-height: 1.3; text-wrap: balance; }
+    .discount-badge {
+      position: absolute; top: 0.75rem; left: 0.75rem;
+      background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 700;
+      padding: 0.125rem 0.5rem; border-radius: 999px;
+    }
+    .condition-badge {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      font-size: 0.6875rem; font-weight: 600; padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+    }
+    .condition-badge.like-new { background: rgba(255,255,255,0.9); color: #15803d; }
+    .condition-badge.good { background: rgba(255,255,255,0.9); color: #1d4ed8; }
+    .condition-badge.fair { background: rgba(255,255,255,0.9); color: #b45309; }
+    .book-info { padding: 1rem; }
+    .book-info h3 {
+      font-size: 0.9375rem; font-weight: 600; color: var(--fg);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .book-info .book-author { font-size: 0.8125rem; color: var(--muted-fg); margin-bottom: 0.5rem; }
+    .book-prices { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .book-prices .price { font-size: 1.125rem; font-weight: 700; color: var(--primary); }
+    .book-prices .original {
+      font-size: 0.8125rem; color: var(--muted-fg); text-decoration: line-through;
+    }
+    .book-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.75rem; color: var(--muted-fg);
+    }
+    .book-meta .location { display: flex; align-items: center; gap: 0.25rem; }
+    .book-meta .location svg { width: 13px; height: 13px; }
+    .stars { display: flex; gap: 1px; }
+    .stars svg { width: 12px; height: 12px; }
+    .star-filled { color: #f59e0b; }
+    .star-empty { color: #d1d5db; }
+
+    /* ---- Trust ---- */
+    .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .trust-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; }
+    .trust-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--secondary); margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .trust-icon svg { width: 24px; height: 24px; color: var(--primary); }
+    .trust-item h3 { font-weight: 600; margin-bottom: 0.5rem; }
+    .trust-item p { font-size: 0.875rem; color: var(--muted-fg); line-height: 1.6; }
+    @media (max-width: 768px) { .trust-grid { grid-template-columns: 1fr; } }
+
+    /* ---- Testimonials ---- */
+    .testimonial-bg { background: var(--card); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .testimonial-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+    }
+    .testimonial-quote-icon { color: rgba(59,130,196,0.2); margin-bottom: 0.75rem; }
+    .testimonial-quote-icon svg { width: 24px; height: 24px; }
+    .testimonial-text { font-size: 0.875rem; line-height: 1.6; color: var(--fg); margin-bottom: 1rem; }
+    .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+    .testimonial-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(59,130,196,0.1); color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .testimonial-name { font-size: 0.875rem; font-weight: 600; }
+    .testimonial-location { font-size: 0.75rem; color: var(--muted-fg); }
+    @media (max-width: 768px) { .testimonials-grid { grid-template-columns: 1fr; } }
+
+    /* ---- CTA ---- */
+    .cta { background: var(--secondary); text-align: center; }
+    .cta h2 { font-size: 1.875rem; font-weight: 700; text-wrap: balance; }
+    .cta p { margin-top: 0.75rem; color: var(--muted-fg); max-width: 28rem; margin-inline: auto; text-wrap: pretty; }
+    .cta-buttons { margin-top: 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+    @media (max-width: 640px) { .cta h2 { font-size: 1.5rem; } }
+
+    /* ---- Separator ---- */
+    .separator { height: 1px; background: var(--border); }
+
+    /* ---- Footer ---- */
+    .footer { border-top: 1px solid var(--border); background: var(--card); }
+    .footer-inner { max-width: 1280px; margin: 0 auto; padding: 3rem 1rem; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2rem; }
+    .footer-brand p { font-size: 0.875rem; color: var(--muted-fg); line-height: 1.6; margin-top: 0.75rem; }
+    .footer h3 { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .footer ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer li { font-size: 0.875rem; color: var(--muted-fg); }
+    .footer a:hover { color: var(--fg); }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 2rem; margin-top: 2rem; border-top: 1px solid var(--border);
+      font-size: 0.875rem; color: var(--muted-fg);
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+
+    /* Utility */
+    main { flex: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+        </div>
+        <span class="logo-text">KitaBook</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#browse" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          Browse
+        </a>
+        <a href="#" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></svg>
+          Messages
+        </a>
+        <a href="#" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          List a Book
+        </a>
+        <div class="avatar">RW</div>
+      </nav>
+      <button class="mobile-toggle" onclick="document.getElementById('mobile-menu').classList.toggle('active')" aria-label="Toggle menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="mobile-menu">
+      <a href="#browse" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        Browse
+      </a>
+      <a href="#" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></svg>
+        Messages
+      </a>
+      <a href="#" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        List a Book
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="m9 9.5 2 2 4-4"/></svg>
+            Book Trading Community
+          </div>
+          <h1>Trade Books,<br><span>Share Stories</span></h1>
+          <p class="hero-desc">Buy, sell, and trade pre-loved books at great prices. Join thousands of readers building a more affordable and sustainable reading community.</p>
+          <div class="hero-buttons">
+            <a href="#browse" class="btn btn-primary btn-lg">
+              Start Browsing
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="btn btn-outline btn-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+              List a Book
+            </a>
+          </div>
+        </div>
+        <div class="book-stack">
+          <div class="book-stack-item" style="background: linear-gradient(135deg, #4A90D9, #2C5F8A); top: 0; left: 0; transform: rotate(-6deg); z-index: 0;">
+            <p class="author">Andrea Hirata</p>
+            <p class="title">Laskar Pelangi</p>
+          </div>
+          <div class="book-stack-item" style="background: linear-gradient(135deg, #E8C547, #B89530); top: 20px; left: 30px; transform: rotate(0deg); z-index: 1;">
+            <p class="author">James Clear</p>
+            <p class="title">Atomic Habits</p>
+          </div>
+          <div class="book-stack-item" style="background: linear-gradient(135deg, #C45B5B, #8A3030); top: 40px; left: 60px; transform: rotate(6deg); z-index: 2;">
+            <p class="author">Haruki Murakami</p>
+            <p class="title">Norwegian Wood</p>
+          </div>
+          <div class="book-stack-spacer"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="stats-inner">
+        <div class="stat"><p class="stat-value">10,000+</p><p class="stat-label">Books Listed</p></div>
+        <div class="stat"><p class="stat-value">5,000+</p><p class="stat-label">Active Traders</p></div>
+        <div class="stat"><p class="stat-value">20+</p><p class="stat-label">Cities</p></div>
+        <div class="stat"><p class="stat-value">50%</p><p class="stat-label">Avg. Savings</p></div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" style="background: var(--bg);">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2>How KitaBook Works</h2>
+          <p>Three simple steps to start trading books with your community</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+            </div>
+            <h3>List Your Books</h3>
+            <p>Take a photo, set your price, and your book is ready to find a new home in minutes.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+            <h3>Browse & Discover</h3>
+            <p>Search by title, genre, or location. Find great deals from readers near you.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+            </div>
+            <h3>Trade & Exchange</h3>
+            <p>Chat with sellers, negotiate prices, or swap books directly. Meet up and trade!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Books -->
+    <section id="browse" class="section featured-bg">
+      <div class="section-inner">
+        <div class="featured-header">
+          <div>
+            <h2>Featured Books</h2>
+            <p>Recently listed books from our community</p>
+          </div>
+          <a href="#" class="btn btn-outline" style="display: none;" id="view-all-desktop">View All <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="books-grid" id="books-grid"></div>
+      </div>
+    </section>
+
+    <!-- Trust & Safety -->
+    <section class="section" style="background: var(--bg);">
+      <div class="section-inner">
+        <div class="trust-grid">
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <h3>Location-Based</h3>
+            <p>Find books near you. Browse by city and see the distance to each listing for easy local meetups.</p>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+            </div>
+            <h3>Rated Sellers</h3>
+            <p>Every trader has a rating from the community. Trade with confidence knowing the seller's track record.</p>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>Growing Community</h3>
+            <p>Join thousands of book lovers who are making reading more affordable and sustainable.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- Testimonials -->
+    <section class="section testimonial-bg">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2>What Our Community Says</h2>
+          <p>Join thousands of happy readers trading books every day</p>
+        </div>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="testimonial-quote-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 11H5.2C5.6 7.9 7.1 6.2 10 5.7V3c-4.8.5-8 4.1-8 9.1V21h8zm12 0h-4.8c.4-3.1 1.9-4.8 4.8-5.3V3c-4.8.5-8 4.1-8 9.1V21h8z"/></svg>
+            </div>
+            <p class="testimonial-text">I have saved over $200 buying books through KitaBook. The community here is so friendly and trustworthy!</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">RW</div>
+              <div>
+                <p class="testimonial-name">Rina Wijaya</p>
+                <p class="testimonial-location">Beirut</p>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-quote-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 11H5.2C5.6 7.9 7.1 6.2 10 5.7V3c-4.8.5-8 4.1-8 9.1V21h8zm12 0h-4.8c.4-3.1 1.9-4.8 4.8-5.3V3c-4.8.5-8 4.1-8 9.1V21h8z"/></svg>
+            </div>
+            <p class="testimonial-text">As a student, KitaBook has been a lifesaver. I get all my textbooks at half price and can sell them when the semester ends.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">BS</div>
+              <div>
+                <p class="testimonial-name">Budi Santoso</p>
+                <p class="testimonial-location">Tripoli</p>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-quote-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 11H5.2C5.6 7.9 7.1 6.2 10 5.7V3c-4.8.5-8 4.1-8 9.1V21h8zm12 0h-4.8c.4-3.1 1.9-4.8 4.8-5.3V3c-4.8.5-8 4.1-8 9.1V21h8z"/></svg>
+            </div>
+            <p class="testimonial-text">I love the trading feature! I have exchanged over 60 books and met amazing fellow readers through this platform.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">SN</div>
+              <div>
+                <p class="testimonial-name">Siti Nurhaliza</p>
+                <p class="testimonial-location">Jounieh</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta">
+      <div class="section-inner" style="text-align: center;">
+        <h2>Ready to Start Trading?</h2>
+        <p>List your first book today and join our most vibrant book trading community.</p>
+        <div class="cta-buttons">
+          <a href="#browse" class="btn btn-primary btn-lg">
+            Browse Books
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="#" class="btn btn-outline btn-lg">List Your First Book</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <div class="logo-icon" style="width:32px;height:32px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#fff"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+            </div>
+            <span style="font-size:1.125rem;font-weight:700;">KitaBook</span>
+          </a>
+          <p>Trade books, share stories. The community marketplace for affordable books.</p>
+        </div>
+        <div>
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="#browse">Browse Books</a></li>
+            <li><a href="#">List a Book</a></li>
+            <li><a href="#">Fiction</a></li>
+            <li><a href="#">Technology</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Company</h3>
+          <ul>
+            <li>About Us</li>
+            <li>How It Works</li>
+            <li>Safety Tips</li>
+            <li>Contact</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Legal</h3>
+          <ul>
+            <li>Terms of Service</li>
+            <li>Privacy Policy</li>
+            <li>Community Guidelines</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>Made with love for book lovers everywhere</p>
+        <p>&copy; 2026 KitaBook. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Book data
+    const books = [
+      { title: "Laskar Pelangi", author: "Andrea Hirata", price: 4.50, originalPrice: 8.99, condition: "Good", city: "Beirut", rating: 4.8, gradient: ["#4A90D9","#2C5F8A"] },
+      { title: "Sapiens", author: "Yuval Noah Harari", price: 7.50, originalPrice: 14.99, condition: "Like New", city: "Tripoli", rating: 4.6, gradient: ["#D4956B","#8B5E3C"] },
+      { title: "Clean Code", author: "Robert C. Martin", price: 8.50, originalPrice: 17.99, condition: "Good", city: "Tripoli", rating: 4.6, gradient: ["#3B7DD8","#1A4E8A"] },
+      { title: "Bumi Manusia", author: "Pramoedya Ananta Toer", price: 5.50, originalPrice: 9.99, condition: "Fair", city: "Jounieh", rating: 4.9, gradient: ["#C4784A","#7A4A2E"] },
+      { title: "Atomic Habits", author: "James Clear", price: 6.50, originalPrice: 12.99, condition: "Like New", city: "Sidon", rating: 4.5, gradient: ["#E8C547","#B89530"] },
+      { title: "Filosofi Teras", author: "Henry Manampiring", price: 3.99, originalPrice: 7.99, condition: "Good", city: "Batroun", rating: 4.7, gradient: ["#6B8E6B","#3D5C3D"] },
+      { title: "The Alchemist", author: "Paulo Coelho", price: 3.50, originalPrice: 7.50, condition: "Good", city: "Beirut", rating: 4.8, gradient: ["#D4A76A","#A67C4A"] },
+      { title: "Design Patterns", author: "Gang of Four", price: 9.50, originalPrice: 19.99, condition: "Fair", city: "Byblos", rating: 4.3, gradient: ["#5B5BAE","#363672"] },
+    ];
+
+    function formatPrice(p) { return "$" + p.toFixed(2); }
+
+    function renderStars(rating) {
+      const full = Math.round(rating);
+      let html = '<div class="stars">';
+      for (let i = 0; i < 5; i++) {
+        html += i < full
+          ? '<svg class="star-filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
+          : '<svg class="star-empty" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function conditionClass(c) {
+      if (c === "Like New") return "like-new";
+      if (c === "Good") return "good";
+      return "fair";
+    }
+
+    const grid = document.getElementById("books-grid");
+    books.forEach(book => {
+      const discount = Math.round(((book.originalPrice - book.price) / book.originalPrice) * 100);
+      grid.innerHTML += `
+        <div class="book-card">
+          <div class="book-cover" style="background: linear-gradient(135deg, ${book.gradient[0]}, ${book.gradient[1]})">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <p class="author">${book.author}</p>
+              <p class="title">${book.title}</p>
+            </div>
+            ${discount > 0 ? `<div class="discount-badge">-${discount}%</div>` : ""}
+            <div class="condition-badge ${conditionClass(book.condition)}">${book.condition}</div>
+          </div>
+          <div class="book-info">
+            <h3>${book.title}</h3>
+            <p class="book-author">${book.author}</p>
+            <div class="book-prices">
+              <span class="price">${formatPrice(book.price)}</span>
+              <span class="original">${formatPrice(book.originalPrice)}</span>
+            </div>
+            <div class="book-meta">
+              <div class="location">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+                ${book.city}
+              </div>
+              ${renderStars(book.rating)}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    // Show view all button on desktop
+    if (window.innerWidth >= 640) {
+      document.getElementById("view-all-desktop").style.display = "inline-flex";
+    }
+  </script>
+</body>
+</html>
